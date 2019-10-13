@@ -1,16 +1,18 @@
 ﻿using Apache.NMS;
 using Apache.NMS.ActiveMQ;
+using QueueAdapter.Interfaces;
 using System;
+using System.Text;
 
-namespace ActiveMQ.QueueAdapter
+namespace QueueAdapter.ActiveMQ
 {
-    public class QueueAdapter
+    public class QueueAdapter : IQueueAdapter
     {
         private IConnectionFactory mConnectionFactory;
         private IConnection mConnection;
         private ISession mSession;
 
-        public string URI { get; } = "activemq:tcp://localhost:8161";
+        public string URI { get; } = "activemq:tcp://localhost:61616";
 
         public void Connect()
         {
@@ -37,15 +39,19 @@ namespace ActiveMQ.QueueAdapter
                 {
                     Console.WriteLine($"Start listening to {destinationName}");
 
-                    IMessage message;
                     while (true)
                     {
-                        message = consumer.Receive();
+                        IMessage message = consumer.Receive();
                         if (message != null)
                         {
-                            ITextMessage textMessage = message as ITextMessage;
-                            if (!string.IsNullOrEmpty(textMessage.Text))
-                                Console.WriteLine($"Recieved message: {textMessage.Text}");
+                            if (message is IBytesMessage byteMessage)
+                            {
+                                string textMessage = Encoding.UTF8.GetString(byteMessage.Content);
+                                if (!string.IsNullOrEmpty(textMessage))
+                                    Console.WriteLine($"Recieved message: {textMessage}");
+                            }
+
+                            Console.WriteLine($"Could not parse message, type of message is: {message.NMSType}");
                         }
                     }
                 }
