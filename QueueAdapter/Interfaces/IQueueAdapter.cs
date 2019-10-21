@@ -1,9 +1,11 @@
-﻿namespace QueueAdapter.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace QueueAdapter.Interfaces
 {
     public interface IQueueAdapter
     {
         void Connect();
-        void RecieveMessage(string destinationName);
-        void SendMessage(string message, string destinationName);
+        Task<byte[]> RecieveMessage(string destinationName);
+        void SendMessage(byte[] message, string destinationName);
     }
 }

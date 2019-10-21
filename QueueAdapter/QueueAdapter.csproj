@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Apache.NMS.ActiveMQ" Version="1.7.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.10.0" />
   </ItemGroup>
 
 </Project>

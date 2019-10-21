@@ -10,34 +10,33 @@ namespace TripScheduler
     {
         static async Task Main()
         {
+            string queueName = "schedules";
+            bool isFinishedSigneled = false;
+
             IQueueAdapter queueAdapter = new QueueAdapter.ActiveMQ.QueueAdapter();
             queueAdapter.Connect();
-            queueAdapter.RecieveMessage("some_queue");
-
-            return;
-
-            SchedulerRanker schedulerRanker = new SchedulerRanker();
-            RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()
+            
+            while(!isFinishedSigneled)
             {
-                DayWithEventsBadPoints = 2
-            };
+                byte[] message = await queueAdapter.RecieveMessage(queueName);
+                ScheduleDto.Schedule schedule = ScheduleDto.Schedule.Parser.ParseFrom(message);
 
+                SchedulerRanker schedulerRanker = new SchedulerRanker();
+                RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()
+                {
+                    DayWithEventsBadPoints = 2
+                };
 
-            Func<ISchedule, Task<double>> rankingStrategy = rankingStrategyBuilder.BuildStrategy();
-            // Dictionary<id(int), rank(double)>.
-            Dictionary<int, double> scheduleRanksDict = new Dictionary<int, double>();
+                Func<ISchedule, Task<double>> rankingStrategy = rankingStrategyBuilder.BuildStrategy();
+                // Dictionary<id(int), rank(double)>.
+                Dictionary<int, double> scheduleRanksDict = new Dictionary<int, double>();
 
-            List<ISchedule> schedules = await GetSchedules();
-            foreach (ISchedule schedule in schedules)
-            {
-                scheduleRanksDict[schedule.ID] = schedulerRanker.RankSchedule(schedule, rankingStrategy);
+                List<ISchedule> schedules = await GetSchedules();
+                foreach (ISchedule schedule in schedules)
+                {
+                    scheduleRanksDict[schedule.ID] = schedulerRanker.RankSchedule(schedule, rankingStrategy);
+                }
             }
-        }
-
-        // TODO
-        private static Task<List<ISchedule>> GetSchedules()
-        {
-            return Task.FromResult(new List<ISchedule>());
         }
     }
 }

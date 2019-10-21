@@ -2,7 +2,7 @@
 using Apache.NMS.ActiveMQ;
 using QueueAdapter.Interfaces;
 using System;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace QueueAdapter.ActiveMQ
 {
@@ -30,8 +30,10 @@ namespace QueueAdapter.ActiveMQ
             Console.WriteLine($"Connected is already available");
         }
 
-        public void RecieveMessage(string destinationName)
+        public Task<byte[]> RecieveMessage(string destinationName)
         {
+            byte[] byteMessageContent = new byte[] { };
+
             try
             {
                 IDestination dest = mSession.GetDestination(destinationName);
@@ -39,21 +41,21 @@ namespace QueueAdapter.ActiveMQ
                 {
                     Console.WriteLine($"Start listening to {destinationName}");
 
-                    while (true)
+                    IMessage message = consumer.Receive();
+                    if (message != null)
                     {
-                        IMessage message = consumer.Receive();
-                        if (message != null)
+                        if (message is IBytesMessage byteMessage)
                         {
-                            if (message is IBytesMessage byteMessage)
-                            {
-                                string textMessage = Encoding.UTF8.GetString(byteMessage.Content);
-                                if (!string.IsNullOrEmpty(textMessage))
-                                    Console.WriteLine($"Recieved message: {textMessage}");
-                            }
-
-                            Console.WriteLine($"Could not parse message, type of message is: {message.NMSType}");
+                            byteMessageContent = byteMessage.Content;
+                            return Task.FromResult(byteMessageContent);
                         }
+
+                        Console.WriteLine($"Could not parse message, type of message is: {message.NMSType}");
+                        return Task.FromResult(byteMessageContent);
                     }
+
+                    Console.WriteLine($"Null Message");
+                    return Task.FromResult(byteMessageContent);
                 }
             }
             catch (Exception ex)
@@ -61,18 +63,18 @@ namespace QueueAdapter.ActiveMQ
                 Console.WriteLine(ex);
                 Console.WriteLine("Press <ENTER> to exit.");
                 Console.Read();
+                return Task.FromResult(byteMessageContent);
             }
         }
 
-        public void SendMessage(string message, string destinationName)
+        public void SendMessage(byte[] message, string destinationName)
         {
             try
             {
                 IDestination destination = mSession.GetDestination(destinationName);
                 using (IMessageProducer producer = mSession.CreateProducer(destination))
                 {
-                    var textMessage = producer.CreateTextMessage(message);
-                    producer.Send(textMessage);
+                    producer.Send(producer.CreateBytesMessage(message));
                 }
             }
             catch (Exception ex)
