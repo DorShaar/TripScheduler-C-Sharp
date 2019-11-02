@@ -2,9 +2,9 @@
 
 namespace TripScheduler.Interfaces
 {
-     internal interface ISchedule
+     public interface ISchedule
      {
           int ID { get; }
-          IEnumerable<IEvent> Events { get; }
+          IEnumerable<IEvent> EventsList { get; }
      }
 }

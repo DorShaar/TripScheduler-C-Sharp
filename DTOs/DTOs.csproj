@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <ApplicationIcon />
-    <StartupObject />
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+    <PackageReference Include="Google.Protobuf" Version="3.10.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TripScheduler.Interfaces\TripScheduler.Interfaces.csproj" />
   </ItemGroup>
 

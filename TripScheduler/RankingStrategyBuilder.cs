@@ -22,8 +22,8 @@ namespace TripScheduler
           private Task<double> RankSchedule(ISchedule schedule)
           {
                double timeRankPoint = CalculateRankByTime(
-                    schedule.Events.Select(e => e.EventTime.ActualStartingTime)).Result;
-               timeRankPoint += CalculateRankByLocation(schedule.Events).Result;
+                    schedule.EventsList.Select(e => e.EventTime.ActualStartingTime)).Result;
+               timeRankPoint += CalculateRankByLocation(schedule.EventsList).Result;
                return Task.FromResult(timeRankPoint);
           }
 

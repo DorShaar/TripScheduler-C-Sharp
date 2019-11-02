@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Dto;
+using System;
 using System.Threading.Tasks;
 using TripScheduler.Interfaces;
 
 namespace TripScheduler
 {
-    internal class SchedulerRanker : IScheduleRanker
+    internal class SchedulerRanker
     {
-        public async Task<ScheduleRank> RankSchedule(ISchedule schedule, Func<ISchedule, Task<double>> rankAlgorithm)
+        public async Task<IScheduleRank> RankSchedule(ISchedule schedule, Func<ISchedule, Task<double>> rankAlgorithm)
         {
             //SchedulerRanker schedulerRanker = new SchedulerRanker();
             //RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()
@@ -18,7 +19,12 @@ namespace TripScheduler
             //Func<ISchedule, Task<double>> rankingStrategy = rankingStrategyBuilder.BuildStrategy();
 
             double rank = await rankAlgorithm(schedule);
-            return new ScheduleRank(schedule.ID, rank);
+            ScheduleRank scheduleRank = new ScheduleRank()
+            {
+                ID = schedule.ID,
+                Rank = rank
+            };
+            return scheduleRank;
         }
     }
 }
