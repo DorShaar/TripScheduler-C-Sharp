@@ -82,5 +82,11 @@ namespace QueueAdapter.ActiveMQ
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        public void Dispose()
+        {
+            mSession.Dispose();
+            mConnection.Dispose();
+        }
     }
 }

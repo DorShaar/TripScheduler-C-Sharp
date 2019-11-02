@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace QueueAdapter.Interfaces
 {
-    public interface IQueueAdapter
+    public interface IQueueAdapter : IDisposable
     {
         void Connect();
         Task<byte[]> RecieveMessage(string destinationName);
