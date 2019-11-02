@@ -1,5 +1,4 @@
-﻿using QueueAdapter.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TripScheduler.Interfaces;
@@ -24,7 +23,8 @@ namespace TripScheduler
                 SchedulerRanker schedulerRanker = new SchedulerRanker();
                 RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()
                 {
-                    DayWithEventsBadPoints = 2
+                    DayWithEventsBadPoints = 2,
+                    EmptyOneHourSlotBadPoints = 1
                 };
 
                 Func<ISchedule, Task<double>> rankingStrategy = rankingStrategyBuilder.BuildStrategy();

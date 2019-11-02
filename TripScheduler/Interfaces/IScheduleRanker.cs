@@ -5,6 +5,6 @@ namespace TripScheduler.Interfaces
 {
      internal interface IScheduleRanker
      {
-          double RankSchedule(ISchedule schedule, Func<ISchedule, Task<double>> rankAlgorithm);
+          Task<ScheduleRank> RankSchedule(ISchedule schedule, Func<ISchedule, Task<double>> rankAlgorithm);
      }
 }
