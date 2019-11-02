@@ -2,60 +2,55 @@
 using Apache.NMS.ActiveMQ;
 using QueueAdapter.Interfaces;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace QueueAdapter.ActiveMQ
 {
     public class QueueAdapter : IQueueAdapter
     {
-        private IConnectionFactory mConnectionFactory;
         private IConnection mConnection;
-        private ISession mSession;
-
         public string URI { get; } = "activemq:tcp://localhost:61616";
 
-        public void Connect()
+        public QueueAdapter()
         {
-            mConnectionFactory = new ConnectionFactory(URI);
-            if (mConnection == null)
-            {
-                mConnection = mConnectionFactory.CreateConnection();
-                mConnection.Start();
-                mSession = mConnection.CreateSession();
-
-                Console.WriteLine($"Connected to {URI}");
-                return;
-            }
-
-            Console.WriteLine($"Connected is already available");
+            SetupConnection();
         }
 
-        public Task<byte[]> RecieveMessage(string destinationName)
+        private void SetupConnection()
+        {
+            mConnection = new ConnectionFactory(URI).CreateConnection();
+        }
+
+        public Task RecieveMessage(string destinationName, CancellationToken cancellationToken = default)
         {
             byte[] byteMessageContent = new byte[] { };
 
             try
             {
-                IDestination dest = mSession.GetDestination(destinationName);
-                using (IMessageConsumer consumer = mSession.CreateConsumer(dest))
+                using (ISession session = mConnection.CreateSession())
+                using (IDestination dest = session.GetDestination(destinationName))
+                using (IMessageConsumer consumer = session.CreateConsumer(dest))
                 {
                     Console.WriteLine($"Start listening to {destinationName}");
 
-                    IMessage message = consumer.Receive();
-                    if (message != null)
+                    while(!cancellationToken.IsCancellationRequested)
                     {
-                        if (message is IBytesMessage byteMessage)
+                        IMessage message = consumer.Receive();
+                        if (message != null)
                         {
-                            byteMessageContent = byteMessage.Content;
-                            return Task.FromResult(byteMessageContent);
+                            if (message is IBytesMessage byteMessage)
+                            {
+                                // adapter should not know about dtos.
+                                ScheduleDto.Schedule schedule = ScheduleDto.Schedule.Parser.ParseFrom(byteMessage.Content);
+                                // call scheduleRanker func.
+                            }
+
+                            Console.WriteLine($"Could not parse message, type of message is: {message.NMSType}");
                         }
 
-                        Console.WriteLine($"Could not parse message, type of message is: {message.NMSType}");
-                        return Task.FromResult(byteMessageContent);
+                        Console.WriteLine($"Null message recieved");
                     }
-
-                    Console.WriteLine($"Null Message");
-                    return Task.FromResult(byteMessageContent);
                 }
             }
             catch (Exception ex)
@@ -67,7 +62,7 @@ namespace QueueAdapter.ActiveMQ
             }
         }
 
-        public void SendMessage(byte[] message, string destinationName)
+        public Task SendMessage(byte[] message, string destinationName, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -81,12 +76,6 @@ namespace QueueAdapter.ActiveMQ
             {
                 Console.WriteLine(ex.ToString());
             }
-        }
-
-        public void Dispose()
-        {
-            mSession.Dispose();
-            mConnection.Dispose();
         }
     }
 }

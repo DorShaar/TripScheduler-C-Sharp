@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace QueueAdapter.Interfaces
 {
-    public interface IQueueAdapter : IDisposable
+    public interface IQueueAdapter
     {
-        void Connect();
-        Task<byte[]> RecieveMessage(string destinationName);
-        void SendMessage(byte[] message, string destinationName);
+        Task RecieveMessage(string destinationName, CancellationToken cancellationToken);
+        Task SendMessage(byte[] message, string destinationName, CancellationToken cancellationToken);
     }
 }
