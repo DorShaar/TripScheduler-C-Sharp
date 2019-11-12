@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TripScheduler.Interfaces;
 
 namespace QueueAdapter.Interfaces
 {
     public interface IQueueAdapter
     {
-        Task RecieveMessage(string destinationName, CancellationToken cancellationToken);
-        Task SendMessage(byte[] message, string destinationName, CancellationToken cancellationToken);
+        Task RecieveMessages(
+            Func<ISchedule, Task<IScheduleRank>> handler,
+            string recieveMessagesChannelName,
+            string sendMessageChannelName,
+            CancellationToken cancellationToken);
     }
 }

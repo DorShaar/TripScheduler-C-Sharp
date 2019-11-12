@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\QueueAdapter\QueueAdapter.csproj" />
     <ProjectReference Include="..\TripScheduler.Interfaces\TripScheduler.Interfaces.csproj" />
   </ItemGroup>
 
