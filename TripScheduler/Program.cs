@@ -12,21 +12,29 @@ namespace TripScheduler
 
         public static void Main()
         {
-            SchedulerRanker schedulerRanker = new SchedulerRanker();
+            // TODO move to config file:
             RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()
             {
                 DayWithEventsBadPoints = 2,
                 EmptyOneHourSlotBadPoints = 1
             };
 
+            SchedulerRanker schedulerRanker = new SchedulerRanker(rankingStrategyBuilder.BuildStrategy());
+
+            string inChannelName = "in";
+            string outChannelName = "out";
+
+            // END TODO
+
             Func<ISchedule, Task<double>> rankingStrategy = rankingStrategyBuilder.BuildStrategy();
 
-            Task recieveMessagesTask = mQueueAdapter.RecieveMessage(
-                schedulerRanker.RankSchedule(, rankingStrategy), new CancellationToken());
+            Task recieveMessagesTask = mQueueAdapter.RecieveMessages(
+                schedulerRanker.RankSchedule,
+                inChannelName,
+                outChannelName,
+                new CancellationToken());
 
-            Task sendMessageTask = mQueueAdapter.SendMessage(,);
-
-            Task.WaitAll(recieveMessagesTask, sendMessageTask);
+            recieveMessagesTask.Wait();
         }
     }
 }
