@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripScheduler", "TripScheduler\TripScheduler.csproj", "{CC501999-1B63-4A91-9F82-5C362ABA5EC5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueueAdapter", "QueueAdapter\QueueAdapter.csproj", "{14C3C8F7-2C45-4EC3-B8B3-BDC3E6867ECC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "DTOs\DTOs.csproj", "{E4A3B204-F12E-4826-ADFE-E5139057E082}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripScheduler.Interfaces", "TripScheduler.Interfaces\TripScheduler.Interfaces.csproj", "{EB444501-9012-4B4A-BC69-EB410A22E402}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dockerfile", "Dockerfile", "{9F6D66B1-8E1D-42C9-94C1-B74770D52556}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripScheduler", "TripScheduler\TripScheduler.csproj", "{23925388-92EA-4008-83D4-E1F80461C35C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CC501999-1B63-4A91-9F82-5C362ABA5EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC501999-1B63-4A91-9F82-5C362ABA5EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC501999-1B63-4A91-9F82-5C362ABA5EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC501999-1B63-4A91-9F82-5C362ABA5EC5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{14C3C8F7-2C45-4EC3-B8B3-BDC3E6867ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{14C3C8F7-2C45-4EC3-B8B3-BDC3E6867ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14C3C8F7-2C45-4EC3-B8B3-BDC3E6867ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +31,10 @@ Global
 		{EB444501-9012-4B4A-BC69-EB410A22E402}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB444501-9012-4B4A-BC69-EB410A22E402}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB444501-9012-4B4A-BC69-EB410A22E402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23925388-92EA-4008-83D4-E1F80461C35C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23925388-92EA-4008-83D4-E1F80461C35C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23925388-92EA-4008-83D4-E1F80461C35C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23925388-92EA-4008-83D4-E1F80461C35C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

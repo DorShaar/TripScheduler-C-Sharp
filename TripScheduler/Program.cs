@@ -10,7 +10,7 @@ namespace TripScheduler
     {
         private static readonly IQueueAdapter mQueueAdapter = new QueueAdapter.ActiveMQ.QueueAdapter();
 
-        public static void Main()
+        public static void Main(string[] args)
         {
             // TODO move to config file:
             RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()

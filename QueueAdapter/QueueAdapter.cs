@@ -31,7 +31,7 @@ namespace QueueAdapter.ActiveMQ
             CancellationToken cancellationToken = default)
         {
             using (ISession session = mConnection.CreateSession())
-            using (IDestination dest = session.GetDestination(recieveMessagesChannelName))
+            using (IDestination dest = session.GetTopic(recieveMessagesChannelName))
             using (IMessageConsumer consumer = session.CreateConsumer(dest))
             {
                 Console.WriteLine($"Start listening to {recieveMessagesChannelName}");
@@ -59,7 +59,7 @@ namespace QueueAdapter.ActiveMQ
         private void SendMessage(byte[] messageData, string destinationName)
         {
             using (ISession session = mConnection.CreateSession())
-            using (IDestination destination = session.GetDestination(destinationName))
+            using (IDestination destination = session.GetTopic(destinationName))
             using (IMessageProducer producer = session.CreateProducer(destination))
             {
                 producer.Send(producer.CreateBytesMessage(messageData));
