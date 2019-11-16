@@ -9,7 +9,7 @@ namespace TripScheduler
      /// <summary>
      /// The lowest score, the best rank.
      /// </summary>
-     internal class RankingStrategyBuilder
+     public class RankingStrategyBuilder
      {
           public double EmptyOneHourSlotBadPoints { get; set; } = 1;
           public double DayWithEventsBadPoints { get; set; } = 5;

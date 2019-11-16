@@ -4,7 +4,7 @@ using TripScheduler.Interfaces;
 
 namespace TripScheduler
 {
-    internal class SchedulerRanker
+    public class SchedulerRanker
     {
         Func<ISchedule, Task<double>> RankAlgorithm { get; set; }
 

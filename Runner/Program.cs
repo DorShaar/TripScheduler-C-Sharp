@@ -1,37 +1,39 @@
-﻿using QueueAdapter.Interfaces;
+﻿using Composition;
+using Microsoft.Extensions.Options;
+using QueueAdapter.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TripScheduler;
+using TripScheduler.Configuration;
 using TripScheduler.Interfaces;
 
-namespace TripScheduler
+namespace Runner
 {
     public class Program
     {
         private static readonly IQueueAdapter mQueueAdapter = new QueueAdapter.ActiveMQ.QueueAdapter();
+        private static readonly TripSchedulerServiceProvider mServiceProvider = new TripSchedulerServiceProvider();
 
         public static void Main(string[] args)
         {
-            // TODO move to config file:
+            IOptions<ChannelsOptions> channelsOptions = mServiceProvider.GetChannelOptions();
+            IOptions<RankingStrategyOptions> rankingStrategyOptions = mServiceProvider.GetRankingStrategyOptions();
+
             RankingStrategyBuilder rankingStrategyBuilder = new RankingStrategyBuilder()
             {
-                DayWithEventsBadPoints = 2,
-                EmptyOneHourSlotBadPoints = 1
+                DayWithEventsBadPoints = rankingStrategyOptions.Value.DayWithEventsBadPoints,
+                EmptyOneHourSlotBadPoints = rankingStrategyOptions.Value.EmptyOneHourSlotBadPoints
             };
 
             SchedulerRanker schedulerRanker = new SchedulerRanker(rankingStrategyBuilder.BuildStrategy());
-
-            string inChannelName = "in";
-            string outChannelName = "out";
-
-            // END TODO
 
             Func<ISchedule, Task<double>> rankingStrategy = rankingStrategyBuilder.BuildStrategy();
 
             Task recieveMessagesTask = mQueueAdapter.RecieveMessages(
                 schedulerRanker.RankSchedule,
-                inChannelName,
-                outChannelName,
+                channelsOptions.Value.RecieveChannelName,
+                channelsOptions.Value.SendChannelName,
                 new CancellationToken());
 
             recieveMessagesTask.Wait();
